@@ -14,6 +14,8 @@
 ├── frontend/                 Vue 3 + Vite + TypeScript 前端（唯一运行单元）
 │   ├── src/views/            每个业务模块一个页面
 │   ├── src/api/local-service.ts   本地数据服务：列表、筛选、动作流转、导出
+│   ├── src/domain/compliance.ts   达标判定共用实现：限值解析 / 基准氧折算 / 留档
+│   ├── src/api/compliance-service.ts  环保监控：提交去重、判定回写月报台账、报表与大屏取数
 │   ├── src/data/             模块元数据 / 示例数据 / localStorage 持久化
 │   ├── src/stores/           会话与筛选状态
 │   └── vite.config.ts        dev server 配置（open: false，无 /api 代理）
@@ -68,4 +70,7 @@ npm run build
 - 字段、状态、动作与流转目标集中在 `frontend/src/data/modules.ts`；示例数据在
   `frontend/src/data/seed.ts`。
 - 状态流转只允许在 `local-service.ts` 里改，页面组件不做业务判断。
+- 环保达标判定只有 `src/domain/compliance.ts` 一份实现：监控清单、环保口上报表（实测值按基准氧
+  9% 折算后比较）、运营大屏都按监控编号读同一结论。判定达标的记录盖上留档戳，按当时结论留档、
+  之后不重算，并回写环保口月报台账（同一编号同一月份只一条）；同一监控编号重复提交只保留一条。
 - 想回到初始数据：清掉浏览器里 `waste-to-energy-plant:entries` 这一项，或调用 `resetModule(模块)`。
